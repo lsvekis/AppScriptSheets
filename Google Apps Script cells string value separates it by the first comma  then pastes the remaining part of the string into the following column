@@ -1,0 +1,19 @@
+function splitByFirstCommaAndMove() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  // Specify the range you want to process, e.g., "A1:A10"
+  var range = sheet.getRange("A1:A10");
+  var values = range.getValues();
+
+  for (var i = 0; i < values.length; i++) {
+    var currentCell = values[i][0]; // Assumes the data is in the first column
+    var firstCommaIndex = currentCell.indexOf(",");
+    if (firstCommaIndex !== -1) {
+      var beforeComma = currentCell.substring(0, firstCommaIndex);
+      var afterComma = currentCell.substring(firstCommaIndex + 1);
+      // Update the original cell with the part before the comma
+      sheet.getRange(i + 1, range.getColumn()).setValue(beforeComma.trim());
+      // Paste the part after the comma into the following column
+      sheet.getRange(i + 1, range.getColumn() + 1).setValue(afterComma.trim());
+    }
+  }
+}
