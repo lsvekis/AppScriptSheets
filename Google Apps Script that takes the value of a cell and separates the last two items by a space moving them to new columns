@@ -1,0 +1,20 @@
+function splitAndMove() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  // Specify the range you want to process, e.g., "A1:A10"
+  var range = sheet.getRange("A1:A10");
+  var values = range.getValues();
+
+  for (var i = 0; i < values.length; i++) {
+    var currentCell = values[i][0]; // Assumes the data is in the first column
+    var parts = currentCell.split(" ");
+    if (parts.length > 2) {
+      var lastTwo = parts.slice(-2); // Get the last two elements
+      var rest = parts.slice(0, -2).join(" "); // Rejoin the rest
+      // Update the original cell with the rest of the string
+      sheet.getRange(i + 1, range.getColumn()).setValue(rest);
+      // Set the last two elements in the next two columns
+      sheet.getRange(i + 1, range.getColumn() + 1).setValue(lastTwo[0]);
+      sheet.getRange(i + 1, range.getColumn() + 2).setValue(lastTwo[1]);
+    }
+  }
+}
