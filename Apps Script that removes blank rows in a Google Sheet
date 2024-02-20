@@ -1,0 +1,21 @@
+function removeBlankRows() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const range = sheet.getDataRange();
+  const values = range.getValues();
+  let blankRows = [];
+
+  // Loop through all rows in reverse order to handle deletion correctly
+  for (let i = values.length - 1; i >= 0; i--) {
+    const row = values[i];
+    const isBlank = row.every(cell => !cell);
+    if (isBlank) {
+      // If the row is blank, mark it for deletion
+      blankRows.push(i + 1); // Add 1 because sheet rows are 1-indexed
+    }
+  }
+
+  // Delete all marked rows, starting from the bottom
+  for (let i = 0; i < blankRows.length; i++) {
+    sheet.deleteRow(blankRows[i]);
+  }
+}
