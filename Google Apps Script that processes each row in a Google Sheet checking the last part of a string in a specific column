@@ -1,0 +1,27 @@
+function processRowsAndSplitNumbers() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const range = sheet.getDataRange(); // Adjust this if you want to limit the range
+  const values = range.getValues();
+
+  // Loop through each row in the column
+  for (let i = 1; i < values.length; i++) { // Start from 1 to skip header row
+    const row = values[i];
+    const cellValue = row[0]; // Assuming we're checking column A
+    const parts = cellValue.split(' '); // Split the string by space
+    const lastPart = parts[parts.length - 1]; // Get the last part of the split
+
+    // Check if the last part is numeric
+    if (!isNaN(lastPart) && lastPart.trim() !== '') {
+      // If numeric, remove the last part from the original string
+      parts.pop(); // Remove the last element (the numeric part)
+      const newStringValue = parts.join(' '); // Re-join the remaining parts
+      const numericValue = lastPart; // The numeric part to move to the next column
+
+      // Update the sheet: set the new string value back to the original cell
+      // and the numeric value to the next column
+      sheet.getRange(i + 1, 1).setValue(newStringValue); // +1 because ranges are 1-indexed
+      sheet.getRange(i + 1, 2).setValue(numericValue); // Assuming you want to put the number in column B
+    }
+    // If the last part is not numeric, the row is skipped automatically
+  }
+}
