@@ -1,0 +1,27 @@
+function sendEmailsFromSpreadsheet() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  var templateId = "YOUR_HTML_TEMPLATE_ID"; // Replace with the ID of your HTML template
+  var templateDoc = DocumentApp.openById(templateId);
+  var templateText = templateDoc.getBody().getText();
+  
+  // Assuming the first row contains headers
+  for (var i = 1; i < data.length; i++) {
+    var row = data[i];
+    var email = row[0]; // Assuming email addresses are in the first column
+    var name = row[1];  // Assuming names are in the second column
+
+    // Customize email body by replacing placeholders with actual data
+    var emailBody = templateText.replace("{{name}}", name);
+    
+    // Send email
+    MailApp.sendEmail({
+      to: email,
+      subject: "Custom Email Subject",
+      htmlBody: emailBody
+    });
+    
+    // Log email sent status
+    Logger.log("Email sent to: " + email);
+  }
+}
