@@ -1,0 +1,45 @@
+function removeDuplicates() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = sheet.getDataRange().getValues();
+  var newData = [];
+  var duplicateIndices = [];
+
+  // Iterate over the rows and store the index of duplicate rows
+  for (var i = 0; i < data.length; i++) {
+    var row = data[i];
+    var duplicate = false;
+
+    // Check if the row is a duplicate of any previously encountered row
+    for (var j = 0; j < newData.length; j++) {
+      if (arraysEqual(row, newData[j])) {
+        duplicate = true;
+        duplicateIndices.push(i);  // Store index of the duplicate row
+        break;
+      }
+    }
+
+    // If not a duplicate, add it to the new data array
+    if (!duplicate) {
+      newData.push(row);
+    }
+  }
+
+  // Clear the sheet and set the new data without duplicates
+  sheet.clearContents();
+  sheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
+
+  // Optional: Log the indices of removed rows, adjust based on whether your sheet has headers
+  Logger.log("Removed duplicate rows at the following original indices: " + duplicateIndices.join(", "));
+}
+
+// Helper function to compare two arrays (rows)
+function arraysEqual(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
